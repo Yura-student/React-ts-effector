@@ -1,3 +1,5 @@
-import { restore } from "effector";
+import { createEvent, restore } from "effector";
 
-restore
+/* 
+
+export const $fetchError = restore<Error>(эффект запрос.failData, null); */
