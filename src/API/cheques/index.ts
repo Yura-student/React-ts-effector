@@ -1,25 +1,19 @@
-/* import { createEffect, createEvent, createStore } from 'effector'
-import {ICheques} from '.../types'
+import { createEffect } from "effector";
+import { ICheques } from "src/types";
+import axiosInstance from "src/utils/axios";
 
-export const $cheques = createStore<ICheques[]>([]); //создание хранилища
-export const update = createEvent<ICheques>(); //
-
-const updateStore = (state: ICheques[], data: ICheques) => {
-    const chequeIndex = state.findIndex((cheque) => cheque.clientUID === data.clientUID);
-
-   if (chequeIndex > -1) {
-    state.splice(chequeIndex, 1, data);
-   } else {
-    state.push(data);
+//! GET
+// Получение данных с API
+export const fetchCheques = createEffect<any, ICheques[]>(
+   async() => {
+      try{
+         const res: { items : ICheques[] } = await axiosInstance.get(`/cheques`);
+         return res.items;
+      }
+      catch (error) {
+         return Promise.reject(error);
+      }
    }
+);
 
-   return [...state];
-};
-//Подписка на обновления
-$cheques
-   .on(update, updateStore);
 
- */
-    import { restore } from "effector";
-
-    restore

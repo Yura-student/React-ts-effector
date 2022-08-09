@@ -1,5 +1,24 @@
-import { createEvent, restore } from "effector";
+import SubMenu from "antd/lib/menu/SubMenu";
+import { restore } from "effector";
+import { ICheques } from "src/types";
+import { fetchCheques } from "..";
 
-/* 
-
-export const $fetchError = restore<Error>(эффект запрос.failData, null); */
+export const $chequesList = restore<ICheques[]>(fetchCheques.doneData, []);
+export const $chequesListForTable = $chequesList.map((array) => {
+    if (array) {
+      return array.map((item, number) => ({
+        key: number,
+        id: item.id,
+        dateReg: item.dateReg,
+        kioskName: item.kioskName,
+        chequeType: item.chequeType,
+        paysTatus: item.pays,
+        pay: item.pays,
+        sum: item.sum,
+        positions: item.positions,
+        positionsName: item.positions
+      }));
+    } else {
+      return [];
+    }
+  });

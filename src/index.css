@@ -18,11 +18,9 @@
 }
 
 .ant-table-cell.ant-table-selection-column {
-  padding-right: 8px;
   padding-left: 20px;
-  text-align: center;
 }
 
-.ant-table-cell {
+.ant-table-cell{
   text-align: center;
 }
