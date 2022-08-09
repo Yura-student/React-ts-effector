@@ -1,20 +1,15 @@
-import { Button, Table } from 'antd';
+import { Button, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { OmitProps } from 'antd/lib/transfer/ListBody';
 import React, { useState } from 'react';
+import { cheques } from 'src/data/cheques';
+import {ICheques} from 'src/types'
 
-interface DataType {
-  key: React.Key;
-  dateReg: string;
-  kioskName: string;
-  chequeType: boolean;
-  pays: Object;
-  psum: Object;
-  sum: string;
-  chequeState: number;
-  positions: string;
+interface ProductProps {
+  cheques: ICheques;
 }
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<ICheques> = [
   {
     title: 'Дата покупки',
     dataIndex: 'dateReg',
@@ -29,11 +24,43 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: 'Статус оплаты',
-    dataIndex: 'pays[].sum',
+    dataIndex: 'pays', 
+    render: (_, { pays, sum }) => (
+      <>
+        {pays.map(pays => {
+          let payStatus = '';
+          if (pays.sum === sum) {
+            payStatus = 'Оплачено';
+          } 
+          else if (pays.sum === 0) {
+            payStatus = 'Нет оплаты';
+          }     
+          else if (pays.sum < sum) {
+            payStatus = 'Недоплата';
+          }       
+          return (
+          <div>
+            {payStatus}
+          </div>);
+        }
+        )}
+      </>
+    ),
   },
   {
     title: 'Оплата',
-    dataIndex: 'pays[].sum',
+    dataIndex: 'pays.sum',
+    render: (_, { pays, sum }) => (
+      <>
+        {pays.map(pays => {
+          return (
+          <div>
+            {pays.sum}
+          </div>);
+        }
+        )}
+      </>
+    ),    
   },
   {
     title: 'Сумма',
@@ -41,30 +68,39 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: 'Кол-во товара',
-    dataIndex: 'chequeState',
+    dataIndex: 'positions.quantity',
+    render: (_, { positions}) => (
+      <>
+        {positions.map(positions => {
+          return (
+          <div>
+            {positions.quantity}
+          </div>);
+        }
+        )}
+      </>
+    ),  
   },
   {
     title: 'Товары',
-    dataIndex: 'positions[].name',
+    dataIndex: 'positions.name',
+    render: (_, { positions}) => (
+      <>
+        {positions.map(positions => {
+          return (
+          <div>
+            {positions.name}
+          </div>);
+        }
+        )}
+      </>
+    ), 
   },
 ];
 
-const data: DataType[] = [];
-for (let i = 0; i < 10; i++) {
-  data.push({
-    key: i,
-    dateReg: 'дата',
-    kioskName: `Киоск`,
-    chequeType: false ,
-    pays:[],
-    psum: [],
-    sum: 20.2+' р',
-    chequeState: 20,
-    positions: 'капуста',
-  });
-}
 
-export function Tab() {
+
+export function Tab(props: ProductProps) {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
@@ -90,7 +126,7 @@ export function Tab() {
   const hasSelected = selectedRowKeys.length > 0;
   return(
     <div>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+      <Table rowSelection={rowSelection} columns={columns} dataSource={cheques} />
     </div>
   );
 }
