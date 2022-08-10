@@ -15,7 +15,7 @@ interface ChequesTable {
   pay: IPays[],
   sum: number,
   positions: IPositions[],
-  positionsName: IPositions[]
+  positionsName: IPositions[],
 }
 
 const columns: ColumnsType<ChequesTable> = [
@@ -29,7 +29,14 @@ const columns: ColumnsType<ChequesTable> = [
   },
   {
     title: 'Тип',
-    dataIndex: 'chequeType', 
+    dataIndex: 'chequeType',
+    render: (_, { chequeType }) => (
+      <>
+        {
+          chequeType === 0 ? "Продажа" : "Возврат"
+        }
+      </>
+    ), 
   },
   {
     title: 'Статус оплаты',
@@ -61,10 +68,10 @@ const columns: ColumnsType<ChequesTable> = [
     dataIndex: 'pay',
     render: (_, { pay, sum }) => (
       <>
-        {pay?.map(pays => {
+        {pay?.map(pays => {        
           return (
           <div>
-            {pays.sum}
+            {(pays.sum/100).toFixed(2)+ ' ₽'}
           </div>);
         }
         )}
@@ -74,6 +81,15 @@ const columns: ColumnsType<ChequesTable> = [
   {
     title: 'Сумма',
     dataIndex: 'sum',
+    render: (_, { sum }) => (
+      <>     
+        { 
+          <div>
+            {(sum/100).toFixed(2)+ ' ₽'}
+          </div>
+        }
+      </>
+    ),
   },
   {
     title: 'Кол-во товара',
@@ -137,6 +153,9 @@ export function Tab(props: ProductProps) {
 
   return(
     <div>
+      <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
+          Удалить
+      </Button>
       <Table rowSelection={rowSelection} columns={columns} dataSource={cheques} />
     </div>
   );
