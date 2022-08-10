@@ -5,11 +5,12 @@ import axios, {
     AxiosInstance,
     AxiosError,
   } from "axios"
-  
+    
   const axiosInstance: AxiosInstance = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
     timeout: 120000,
   })
+  
   
   const errorHandler = (error: AxiosError) => {
   
@@ -23,7 +24,7 @@ import axios, {
   const resHandler = (response: AxiosResponse) => {
     let { data } = response
   
-    return Promise.resolve(data)
+    return data
   }
   
   const reqHandler = (config: AxiosRequestConfig) => {
@@ -32,5 +33,5 @@ import axios, {
   
   axiosInstance.interceptors.request.use(reqHandler)
   axiosInstance.interceptors.response.use(resHandler, errorHandler)
-  
+
   export default axiosInstance

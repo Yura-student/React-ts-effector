@@ -1,17 +1,20 @@
 import React from 'react';
 import {Tab} from './components/Tab';
 import { useEffect } from 'react';
-import axiosInstance from './utils/axios';
-import {cheques} from './data/cheques';
+import { fetchCheques } from './API/cheques';
+import { useStore } from 'effector-react';
+import { $chequesListForTable } from './API/cheques/store/table';
 
 function App() {
-    
-  useEffect(() => {  
-  const res = axiosInstance.get(`/cheques`)},[])
-    
+  const data = useStore($chequesListForTable)  
+
+  useEffect(() => {
+    fetchCheques ({});
+  },[])
+
   return (
-    <div>
-    <Tab cheques={cheques[0]} /> 
+    <div>      
+      <Tab cheques={data}  />
     </div>
   );
 }

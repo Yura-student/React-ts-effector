@@ -1,15 +1,24 @@
 import { Button, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { OmitProps } from 'antd/lib/transfer/ListBody';
 import React, { useState } from 'react';
-import { cheques } from 'src/data/cheques';
-import {ICheques} from 'src/types'
+import {ICheques, IPays, IPositions} from 'src/types'
 
 interface ProductProps {
-  cheques: ICheques;
+  cheques: ChequesTable[];
 }
 
-const columns: ColumnsType<ICheques> = [
+interface ChequesTable {
+  dateReg: string,
+  kioskName: string,
+  chequeType:number,
+  paysTatus: IPays[],
+  pay: IPays[],
+  sum: number,
+  positions: IPositions[],
+  positionsName: IPositions[]
+}
+
+const columns: ColumnsType<ChequesTable> = [
   {
     title: 'Дата покупки',
     dataIndex: 'dateReg',
@@ -20,14 +29,14 @@ const columns: ColumnsType<ICheques> = [
   },
   {
     title: 'Тип',
-    dataIndex: 'chequeType',
+    dataIndex: 'chequeType', 
   },
   {
     title: 'Статус оплаты',
-    dataIndex: 'pays', 
-    render: (_, { pays, sum }) => (
+    dataIndex: 'paysTatus', 
+    render: (_, { paysTatus, sum }) => (
       <>
-        {pays.map(pays => {
+        {paysTatus?.map(pays => {
           let payStatus = '';
           if (pays.sum === sum) {
             payStatus = 'Оплачено';
@@ -49,10 +58,10 @@ const columns: ColumnsType<ICheques> = [
   },
   {
     title: 'Оплата',
-    dataIndex: 'pays.sum',
-    render: (_, { pays, sum }) => (
+    dataIndex: 'pay',
+    render: (_, { pay, sum }) => (
       <>
-        {pays.map(pays => {
+        {pay?.map(pays => {
           return (
           <div>
             {pays.sum}
@@ -68,10 +77,10 @@ const columns: ColumnsType<ICheques> = [
   },
   {
     title: 'Кол-во товара',
-    dataIndex: 'positions.quantity',
+    dataIndex: 'positions',
     render: (_, { positions}) => (
       <>
-        {positions.map(positions => {
+        {positions?.map(positions => {
           return (
           <div>
             {positions.quantity}
@@ -83,10 +92,10 @@ const columns: ColumnsType<ICheques> = [
   },
   {
     title: 'Товары',
-    dataIndex: 'positions.name',
-    render: (_, { positions}) => (
+    dataIndex: 'positionsName',
+    render: (_, { positionsName}) => (
       <>
-        {positions.map(positions => {
+        {positionsName?.map(positions => {
           return (
           <div>
             {positions.name}
@@ -101,7 +110,7 @@ const columns: ColumnsType<ICheques> = [
 
 
 export function Tab(props: ProductProps) {
-  
+  const {cheques} = props
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -124,6 +133,8 @@ export function Tab(props: ProductProps) {
     onChange: onSelectChange,
   };
   const hasSelected = selectedRowKeys.length > 0;
+
+
   return(
     <div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={cheques} />
