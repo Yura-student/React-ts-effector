@@ -1,7 +1,7 @@
 import { Button, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useState } from 'react';
-import {ICheques, IPays, IPositions} from 'src/types'
+import { IPays, IPositions } from 'src/types'
 
 interface ProductProps {
   cheques: ChequesTable[];

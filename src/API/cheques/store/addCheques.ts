@@ -1,33 +1,91 @@
-import { restore, forward, createEffect } from "effector"
+import { restore, sample, createEffect } from "effector"
 import { createForm } from 'effector-forms'
 
-export const loginForm = createForm({
+export const addModalForm = createForm ({
     fields: {
-        email: {
-            init: "", // field's store initial value
+        dateReg: { 
+            init: "", 
             rules: [
                 {
-                    name: "email",
-                    validator: (value: string) => /\S+@\S+\.\S+/.test(value)
+                    name: "dateReg",
+                    validator: (val) => {
+                        return val !== null ? val?.toString().length > 0 : false;
+                      },
                 },
             ],
         },
-        password: {
-            init: "", // field's store initial value
+        kioskName: {
+            init: "", 
             rules: [
-              {
-                name: "required",
-                validator: (value: string) => Boolean(value),
-              }
+                {
+                    name: "kioskName",
+                    validator: (val) => {
+                        return val !== null ? val?.toString().length > 0 : false;
+                      },
+
+                },
+            ],
+        },
+        chequeType: {
+            init: "", 
+            rules: [
+                {
+                    name: "chequeType",
+                    validator: (value: string) => value != ''
+                },
+            ],
+        },
+        paysTatus: {
+            init: "", 
+            rules: [
+                {
+                    name: "paysTatus",
+                    validator: (value: string) => value != ''
+                },
+            ],
+        },
+        pay: {
+            init: "", 
+            rules: [
+                {
+                    name: "pay",
+                    validator: (value: string) => value != ''
+                },
+            ],
+        },
+        sum: {
+            init: "", 
+            rules: [
+                {
+                    name: "sum",
+                    validator: (value: string) => value != ''
+                },
+            ],
+        },
+        positions: {
+            init: "", 
+            rules: [
+                {
+                    name: "positions",
+                    validator: (value: string) => value != ''
+                },
+            ],
+        },
+        positionsName: {
+            init: "", 
+            rules: [
+                {
+                    name: "positionsName",
+                    validator: (value: string) => value != ''
+                },
             ],
         },
     },
-    validateOn: ["submit"],
+        validateOn: ["submit"],
 })
 
-export const loginFx = createEffect()
+sample({
+    clock: addModalForm.submit,
+    source: addModalForm.$values
 
-forward({
-    from: loginForm.formValidated,
-    to: loginFx,
 })

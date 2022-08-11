@@ -52,14 +52,17 @@
 
 .ant-radio-button-wrapper:first-child:hover {
   background: rgba(167, 166, 166, 0.25);
-  color: #25aef6;
+  color: #1890ff;
 }
 
 .ant-radio-button-wrapper:last-child:hover {
   background: rgba(167, 166, 166, 0.25);
-  color: #25aef6;
+  color: #1890ff;
 }
 
 .ant-radio-group.ant-radio-group-outline {
   margin-bottom: 10px;
+}
+.ant-radio-button-wrapper:first-child:checked {
+  background: #1890ff;
 }

@@ -24,7 +24,7 @@ import axios, {
   const resHandler = (response: AxiosResponse) => {
     let { data } = response
   
-    return data
+    return Promise.resolve(data)
   }
   
   const reqHandler = (config: AxiosRequestConfig) => {
