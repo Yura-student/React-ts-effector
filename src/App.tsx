@@ -5,6 +5,7 @@ import { fetchCheques } from './API/cheques';
 import { useStore } from 'effector-react';
 import { $chequesListForTable } from './API/cheques/store/table';
 import Mod from './components/Modal';
+import DeleteModal from './components/DeleteModal';
 
 function App() {
   const data = useStore($chequesListForTable)  
@@ -15,8 +16,11 @@ function App() {
 
   return (
     <div> 
-      <Mod/>     
-      <Tab cheques={data}  />
+      <Mod/>    
+            
+      <Tab cheques={data}>
+        {/* <DeleteModal /> */}
+      </Tab>
     </div>
   );
 }

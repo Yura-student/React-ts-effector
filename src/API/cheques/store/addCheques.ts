@@ -1,5 +1,8 @@
-import { restore, sample, createEffect } from "effector"
+import { sample } from "effector"
 import { createForm } from 'effector-forms'
+import { ICheques, IPays, IPositions } from "src/types";
+import { addCheques } from "..";
+
 
 export const addModalForm = createForm ({
     fields: {
@@ -86,6 +89,28 @@ export const addModalForm = createForm ({
 
 sample({
     clock: addModalForm.submit,
-    source: addModalForm.$values
-
+    source: addModalForm.$values,
+    /* target: addCheques */
 })
+
+export interface ChequesTable {
+    dateReg: string,
+    kioskName: string,
+    chequeType:number,
+    paysTatus: IPays[],
+    pay: IPays[],
+    sum: number,
+    positions: IPositions[],
+    positionsName: IPositions[],
+  }
+
+/* const ChequesData: ChequesTable = {
+    dateReg: '',
+    kioskName: '',
+    chequeType: 12,
+    paysTatus: 11,
+    pay: 11,
+    sum: 11,
+    positions: 1,
+    positionsName: 'Люля',
+} */

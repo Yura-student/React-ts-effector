@@ -1,7 +1,7 @@
 import { createEffect } from "effector";
 import { ICheques } from "src/types";
 import axiosInstance from "src/utils/axios";
-import { addModalForm } from "./store/addCheques";
+import {ChequesTable} from "./store/addCheques";
 
 //! GET
 // Получение данных с API
@@ -18,10 +18,10 @@ export const fetchCheques = createEffect<any, ICheques[]>(
 );
 
 // POST
-export const addCheques = createEffect<any, ICheques[]>(
+export const addCheques = createEffect<ChequesTable, any>(
    async({...rest}) => {
       try{
-         const res:any = await axiosInstance.post(`/cheques`, rest);
+         const res:any = await axiosInstance.post(`/chequesm?id{Math.random()}`, rest);
          return res;
       }
       catch (error) {

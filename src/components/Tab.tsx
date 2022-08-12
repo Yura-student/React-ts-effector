@@ -1,10 +1,15 @@
-import { Button, Table, Tag } from 'antd';
+import { Button, Modal, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useState } from 'react';
 import { IPays, IPositions } from 'src/types'
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
+interface ModalProps {
+  children: React.ReactNode 
+}
 interface ProductProps {
   cheques: ChequesTable[];
+  children: React.ReactNode;
 }
 
 interface ChequesTable {
@@ -125,7 +130,7 @@ const columns: ColumnsType<ChequesTable> = [
 
 
 
-export function Tab(props: ProductProps) {
+export function Tab(props: ProductProps, {children}: ModalProps) {
   const {cheques} = props
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
@@ -150,15 +155,27 @@ export function Tab(props: ProductProps) {
   };
   const hasSelected = selectedRowKeys.length > 0;
 
+  const { confirm } = Modal;
+  const showConfirm = () => {
 
+    confirm({
+      title: 'Точно хотите удалить чек?',
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        console.log('OK');
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
   return(
     <div>
-      <Button type="primary" onClick={start} disabled={!hasSelected} loading={loading}>
-          Удалить
-      </Button>
+      <Button type="primary" onClick={showConfirm} disabled={!hasSelected} loading={loading}>
+          Удалить { children }
+      </Button> 
+      
       <Table rowSelection={rowSelection} columns={columns} dataSource={cheques} />
     </div>
   );
 }
-
-
