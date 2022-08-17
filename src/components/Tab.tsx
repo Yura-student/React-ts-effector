@@ -1,10 +1,15 @@
-import { Button, Table, Tag } from 'antd';
+import { Button, Modal, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useState } from 'react';
-import {ICheques, IPays, IPositions} from 'src/types'
+import { IPays, IPositions } from 'src/types'
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
+interface ModalProps {
+  children: React.ReactNode 
+}
 interface ProductProps {
   cheques: ChequesTable[];
+  children: React.ReactNode;
 }
 
 interface ChequesTable {
@@ -15,7 +20,7 @@ interface ChequesTable {
   pay: IPays[],
   sum: number,
   positions: IPositions[],
-  positionsName: IPositions[]
+  positionsName: IPositions[],
 }
 
 const columns: ColumnsType<ChequesTable> = [
@@ -29,7 +34,14 @@ const columns: ColumnsType<ChequesTable> = [
   },
   {
     title: 'Тип',
-    dataIndex: 'chequeType', 
+    dataIndex: 'chequeType',
+    render: (_, { chequeType }) => (
+      <>
+        {
+          chequeType === 0 ? "Продажа" : "Возврат"
+        }
+      </>
+    ), 
   },
   {
     title: 'Статус оплаты',
@@ -61,10 +73,10 @@ const columns: ColumnsType<ChequesTable> = [
     dataIndex: 'pay',
     render: (_, { pay, sum }) => (
       <>
-        {pay?.map(pays => {
+        {pay?.map(pays => {        
           return (
           <div>
-            {pays.sum}
+            {(pays.sum/100).toFixed(2)+ ' ₽'}
           </div>);
         }
         )}
@@ -74,6 +86,15 @@ const columns: ColumnsType<ChequesTable> = [
   {
     title: 'Сумма',
     dataIndex: 'sum',
+    render: (_, { sum }) => (
+      <>     
+        { 
+          <div>
+            {(sum/100).toFixed(2)+ ' ₽'}
+          </div>
+        }
+      </>
+    ),
   },
   {
     title: 'Кол-во товара',
@@ -109,7 +130,7 @@ const columns: ColumnsType<ChequesTable> = [
 
 
 
-export function Tab(props: ProductProps) {
+export function Tab(props: ProductProps, {children}: ModalProps) {
   const {cheques} = props
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
@@ -134,12 +155,27 @@ export function Tab(props: ProductProps) {
   };
   const hasSelected = selectedRowKeys.length > 0;
 
+  const { confirm } = Modal;
+  const showConfirm = () => {
 
+    confirm({
+      title: 'Точно хотите удалить чек?',
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        console.log('OK');
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
   return(
     <div>
+      <Button type="primary" onClick={showConfirm} disabled={!hasSelected} loading={loading}>
+          Удалить { children }
+      </Button> 
+      
       <Table rowSelection={rowSelection} columns={columns} dataSource={cheques} />
     </div>
   );
 }
-
-

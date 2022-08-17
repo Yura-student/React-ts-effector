@@ -1,4 +1,3 @@
-import SubMenu from "antd/lib/menu/SubMenu";
 import { restore } from "effector";
 import { ICheques } from "src/types";
 import { fetchCheques } from "..";
@@ -18,7 +17,7 @@ export const $chequesListForTable = $chequesList.map((array) => {
         positions: item.positions,
         positionsName: item.positions
       }));
-    } else {
+    } else  {
       return [];
     }
   });

@@ -18,10 +18,10 @@ export interface ICheques {
         photos:number,
         num:string,
         videoState:number,
-        id: string
+        id: string,
         
         pays:IPays[],
-        positions:IPositions[]
+        positions:IPositions[],
 }
 
 export interface IPays {
