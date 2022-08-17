@@ -11,9 +11,7 @@ export const addModalForm = createForm ({
             rules: [
                 {
                     name: "dateReg",
-                    validator: (val) => {
-                        return val !== null ? val?.toString().length > 0 : false;
-                      },
+                    validator: (val) => (val?.toString()?.length || 0) > 0,
                 },
             ],
         },
@@ -34,15 +32,6 @@ export const addModalForm = createForm ({
             rules: [
                 {
                     name: "chequeType",
-                    validator: (value: string) => value != ''
-                },
-            ],
-        },
-        paysTatus: {
-            init: "", 
-            rules: [
-                {
-                    name: "paysTatus",
                     validator: (value: string) => value != ''
                 },
             ],
@@ -85,15 +74,37 @@ export const addModalForm = createForm ({
         },
     },
         validateOn: ["submit"],
+        
 })
 
 sample({
     clock: addModalForm.submit,
     source: addModalForm.$values,
-    /* target: addCheques */
+    filter: addModalForm.$isValid,
+    fn: (source, clock) =>  {
+        return ({
+        dateReg: source.dateReg,
+        kioskName: source.kioskName,
+        chequeType: Number(source.chequeType),
+        sum: Number(source.sum) * 100,
+        
+        pays: [{
+            sum: Number(source.pay) * 100
+        }],
+        positions: [{
+            name: source.positionsName,
+            quantity: Number(source.positions)
+        }]
+    })},
+    target: addCheques
 })
 
+
+interface CreateCheques{
+    onCreate: () => void
+}
 export interface ChequesTable {
+    id: string,
     dateReg: string,
     kioskName: string,
     chequeType:number,
@@ -103,14 +114,3 @@ export interface ChequesTable {
     positions: IPositions[],
     positionsName: IPositions[],
   }
-
-/* const ChequesData: ChequesTable = {
-    dateReg: '',
-    kioskName: '',
-    chequeType: 12,
-    paysTatus: 11,
-    pay: 11,
-    sum: 11,
-    positions: 1,
-    positionsName: 'Люля',
-} */

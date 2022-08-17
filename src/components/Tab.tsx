@@ -3,16 +3,14 @@ import type { ColumnsType } from 'antd/es/table';
 import React, { useState } from 'react';
 import { IPays, IPositions } from 'src/types'
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-
-interface ModalProps {
-  children: React.ReactNode 
-}
+import { deleteCheques } from 'src/API/cheques';
+import Mod from './Modal';
 interface ProductProps {
   cheques: ChequesTable[];
-  children: React.ReactNode;
 }
 
 interface ChequesTable {
+  id: string,
   dateReg: string,
   kioskName: string,
   chequeType:number,
@@ -58,7 +56,10 @@ const columns: ColumnsType<ChequesTable> = [
           }     
           else if (pays.sum < sum) {
             payStatus = 'Недоплата';
-          }       
+          }      
+          else if (pays.sum > sum) {
+            payStatus = 'Сдача';
+          }     
           return (
           <div>
             {payStatus}
@@ -76,7 +77,7 @@ const columns: ColumnsType<ChequesTable> = [
         {pay?.map(pays => {        
           return (
           <div>
-            {(pays.sum/100).toFixed(2)+ ' ₽'}
+            {(pays?.sum/100).toFixed(2)+ ' ₽'}
           </div>);
         }
         )}
@@ -116,7 +117,7 @@ const columns: ColumnsType<ChequesTable> = [
     dataIndex: 'positionsName',
     render: (_, { positionsName}) => (
       <>
-        {positionsName?.map(positions => {
+        {positionsName?.map(positions => {          
           return (
           <div>
             {positions.name}
@@ -130,10 +131,12 @@ const columns: ColumnsType<ChequesTable> = [
 
 
 
-export function Tab(props: ProductProps, {children}: ModalProps) {
+export function Tab(props: ProductProps) {
   const {cheques} = props
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
+  const [modal, setModal] =useState(true);
+
 
   const start = () => {
     setLoading(true);
@@ -161,20 +164,23 @@ export function Tab(props: ProductProps, {children}: ModalProps) {
     confirm({
       title: 'Точно хотите удалить чек?',
       icon: <ExclamationCircleOutlined />,
-      onOk() {
-        console.log('OK');
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
+      okText: 'Да',
+      cancelText: 'Отмена',
+      onOk: () => {
+        console.log();
+        return deleteCheques
+      }      
     });
   };
+
   return(
     <div>
-      <Button type="primary" onClick={showConfirm} disabled={!hasSelected} loading={loading}>
-          Удалить { children }
+      <div className='buttons'>
+      <Button type="primary" onClick={() => deleteCheques} disabled={!hasSelected} loading={loading}>
+          Удалить
       </Button> 
-      
+      <Mod/>
+      </div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={cheques} />
     </div>
   );
