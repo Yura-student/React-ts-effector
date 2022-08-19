@@ -6,7 +6,7 @@ export const $chequesList = restore<ICheques[]>(fetchCheques.doneData, []);
 export const $chequesListForTable = $chequesList.map((array) => {
     if (array) {
       return array.map((item, number) => ({
-        key: number,
+        key: item.id,
         id: item.id,
         dateReg: item.dateReg,
         kioskName: item.kioskName,

@@ -1,7 +1,7 @@
 import React from "react"
 
 export interface ICheques {
-        key: string,
+        key?: React.Key,
         uid?: string,
         sum:number,
         payType?:number,
@@ -21,7 +21,7 @@ export interface ICheques {
         id: string,
         
         pays:IPays[],
-        positions:IPositions[],
+        positions:IPositions[]
 }
 
 export interface IPays {
@@ -30,5 +30,5 @@ export interface IPays {
 
 export interface IPositions {
     quantity: number,
-    name: string,
+    name: string
 }

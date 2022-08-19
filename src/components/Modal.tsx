@@ -1,39 +1,28 @@
 import { Button, Modal, Radio } from 'antd';
-import React, { useState } from 'react';
 import { useForm } from 'effector-forms'
 import { useStore } from 'effector-react'
-import { addModalForm } from 'src/API/cheques/store/addCheques';
+import { $VisibleModal, addModalForm, closeModal, openModal } from 'src/API/cheques/store/addCheques';
   
-export const Mod = () => {
-  const { fields, values, submit } = useForm(addModalForm)
-
-  const [visible, setVisible] = useState(false);
-  
-  const showModal = () => {
-    setVisible(true);
-  };
-
+export const Mod = () => {    
+  const { values, fields, submit } = useForm(addModalForm)
+  const visibleModal = useStore($VisibleModal)
   
   const handleOk = () => {
     submit();
-    setVisible(false);
   };
 
   const handleCancel = () => {
-    setVisible(false);
-    return (values);
-  };  
-  
-console.log(values);
+    closeModal();
+  };
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
+      <Button type="primary" onClick={() => openModal()}>
         Добавить
       </Button>
       <Modal
         title="Добавление чека"
-        visible={visible}
+        visible={visibleModal}
         onOk = {handleOk}
         okText = 'Добавить'
         cancelText = 'Закрыть'
@@ -51,6 +40,7 @@ console.log(values);
             id='start'
             min='2020-01-01'
             max='2022-12-31'
+            value={values.dateReg}
             onChange={ event => fields.dateReg.onChange(event.target.value)
             }
         />
@@ -63,6 +53,7 @@ console.log(values);
             type='text'
             className={`add ${!fields.kioskName.isValid && 'text-field__input_invalid'}`}
             placeholder='Введите киоск'
+            value={values.kioskName}
             onChange={ event => fields.kioskName.onChange(event.target.value) }
         />
         <div className='valid'>
@@ -75,6 +66,7 @@ console.log(values);
             min='0'
             className={`add ${!fields.pay.isValid && 'text-field__input_invalid'}`}
             placeholder='Внесено'
+            value={values.pay}
             onChange={ event => fields.pay.onChange(event.target.value) }
         />
         <div className='valid'>
@@ -87,6 +79,7 @@ console.log(values);
             min='0'
             className={`add ${!fields.sum.isValid && 'text-field__input_invalid'}`}
             placeholder='Сумма оплаты'
+            value={values.sum}
             onChange={ event => fields.sum.onChange(event.target.value) }
         />
         <div className='valid'>
@@ -99,6 +92,7 @@ console.log(values);
             min='1'
             className={`add ${!fields.positions.isValid && 'text-field__input_invalid'}`}
             placeholder='Кол-во товара'
+            value={values.positions}
             onChange={ event => fields.positions.onChange(event.target.value) }
         />
        <div className='valid'>
@@ -110,6 +104,7 @@ console.log(values);
             type='string'
             className={`add ${!fields.positionsName.isValid && 'text-field__input_invalid'}`}
             placeholder='Товары'
+            value={values.positionsName}
             onChange={ event => fields.positionsName.onChange(event.target.value) }
         />
         <div className='valid'>
@@ -117,7 +112,9 @@ console.log(values);
                 "Выберите значение"
             }
         </div>
-        <Radio.Group onChange={ event => fields.chequeType.onChange(event.target.value) } >
+        <Radio.Group 
+        value={values.chequeType}
+        onChange={ event => fields.chequeType.onChange(event.target.value) } >
         <Radio.Button value='0'>Продажа</Radio.Button>
         <Radio.Button value='1'>Возврат</Radio.Button>
         </Radio.Group>

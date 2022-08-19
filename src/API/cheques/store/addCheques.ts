@@ -1,8 +1,11 @@
-import { sample } from "effector"
+import React from "react";
+import { createEvent, createStore, forward, sample } from "effector"
 import { createForm } from 'effector-forms'
-import { ICheques, IPays, IPositions } from "src/types";
-import { addCheques } from "..";
+import { addCheques, deleteCheques, fetchCheques } from "..";
 
+export const openModal = createEvent()
+export const closeModal = createEvent()
+export const $VisibleModal = createStore(false).on(openModal, () => true).reset(closeModal)
 
 export const addModalForm = createForm ({
     fields: {
@@ -99,18 +102,15 @@ sample({
     target: addCheques
 })
 
+sample({
+    clock: addCheques.doneData, 
+    target: [fetchCheques, addModalForm.reset, closeModal]         // создаем массив куда передаем теккущии значения и добавляем в конец новое и закрываем модальное окно
+})
 
-interface CreateCheques{
-    onCreate: () => void
-}
-export interface ChequesTable {
-    id: string,
-    dateReg: string,
-    kioskName: string,
-    chequeType:number,
-    paysTatus: IPays[],
-    pay: IPays[],
-    sum: number,
-    positions: IPositions[],
-    positionsName: IPositions[],
-  }
+export const AddElement = createEvent<React.Key[]>()
+export const $SelectedList = createStore<React.Key[]>([]).on(AddElement, (_state, payload) => payload)  // создаем стор для поулчения id
+
+forward({
+    from: deleteCheques.doneData,
+    to: fetchCheques
+})
