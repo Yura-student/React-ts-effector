@@ -1,26 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Tab} from './components/Tab';
 import { useEffect } from 'react';
-import { fetchCheques } from './API/cheques';
+import { addCheques, fetchCheques } from './API/cheques';
 import { useStore } from 'effector-react';
 import { $chequesListForTable } from './API/cheques/store/table';
-import Mod from './components/Modal';
-import DeleteModal from './components/DeleteModal';
 
 function App() {
-  const data = useStore($chequesListForTable)  
+  const data = useStore($chequesListForTable)
 
   useEffect(() => {
-    fetchCheques ({});
+    fetchCheques ({} );
   },[])
-
+  
   return (
     <div> 
-      <Mod/>    
-            
-      <Tab cheques={data}>
-        {/* <DeleteModal /> */}
-      </Tab>
+      <Tab cheques={data}/>
     </div>
   );
 }

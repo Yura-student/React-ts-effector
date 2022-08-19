@@ -1,5 +1,4 @@
 import { Button, Modal, Radio } from 'antd';
-import type { RadioChangeEvent } from 'antd';
 import React, { useState } from 'react';
 import { useForm } from 'effector-forms'
 import { useStore } from 'effector-react'
@@ -14,20 +13,18 @@ export const Mod = () => {
     setVisible(true);
   };
 
+  
   const handleOk = () => {
     submit();
+    setVisible(false);
   };
 
   const handleCancel = () => {
     setVisible(false);
+    return (values);
   };  
   
 console.log(values);
-interface AddModal{
-    id: string
-}
-console.log(fields.kioskName.isValid);
-
 
   return (
     <>
@@ -99,7 +96,7 @@ console.log(fields.kioskName.isValid);
         </div>
         <input
             type='number'
-            min='0'
+            min='1'
             className={`add ${!fields.positions.isValid && 'text-field__input_invalid'}`}
             placeholder='Кол-во товара'
             onChange={ event => fields.positions.onChange(event.target.value) }
