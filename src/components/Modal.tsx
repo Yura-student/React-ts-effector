@@ -38,7 +38,7 @@ export const Mod = () => {
             type='datetime-local'
             className={`add ${!fields.dateReg.isValid && 'text-field__input_invalid'}`}
             id='start'
-            min='2020-01-01'
+            min='2020-01-01T00:00'
             max='2022-12-31'
             value={values.dateReg}
             onChange={ event => fields.dateReg.onChange(event.target.value)

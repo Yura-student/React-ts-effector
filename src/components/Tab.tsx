@@ -26,18 +26,15 @@ interface ChequesTable {
 const columns: ColumnsType<ChequesTable> = [
   {
     title: 'Дата покупки',
-    dataIndex: 'dateReg',    
-    key: 'dataReg'
+    dataIndex: 'dateReg',
   },
   {
     title: 'Киоск',
     dataIndex: 'kioskName',
-    key: 'kioskName'
   },
   {
     title: 'Тип',
     dataIndex: 'chequeType',
-    key: 'chequeType',
     render: (_, { chequeType }) => (
       <>
         {
@@ -48,8 +45,7 @@ const columns: ColumnsType<ChequesTable> = [
   },
   {
     title: 'Статус оплаты',
-    dataIndex: 'paysTatus', 
-    key: 'paysTatus',
+    dataIndex: 'paysTatus',
     render: (_, { paysTatus, sum }) => (
       <>
         {paysTatus?.map(pays => {
@@ -67,7 +63,7 @@ const columns: ColumnsType<ChequesTable> = [
             payStatus = 'Сдача';
           }     
           return (
-          <div>
+          <div key={payStatus}>
             {payStatus}
           </div>);
         }
@@ -78,12 +74,11 @@ const columns: ColumnsType<ChequesTable> = [
   {
     title: 'Оплата',
     dataIndex: 'pay',
-    key: 'pay',
     render: (_, { pay, sum }) => (
       <>
         {pay?.map(pays => {        
           return (
-          <div>
+          <div key={pays.sum}>
             {(pays?.sum/100).toFixed(2)+ ' ₽'}
           </div>);
         }
@@ -94,7 +89,6 @@ const columns: ColumnsType<ChequesTable> = [
   {
     title: 'Сумма',
     dataIndex: 'sum',
-    key: 'sum',
     render: (_, { sum }) => (
       <>     
         { 
@@ -108,12 +102,11 @@ const columns: ColumnsType<ChequesTable> = [
   {
     title: 'Кол-во товара',
     dataIndex: 'positions',
-    key: 'positions',
     render: (_, { positions}) => (
       <>
         {positions?.map(positions => {
           return (
-          <div>
+          <div key={Math.random()}>
             {positions.quantity}
           </div>);
         }
@@ -124,12 +117,11 @@ const columns: ColumnsType<ChequesTable> = [
   {
     title: 'Товары',
     dataIndex: 'positionsName',
-    key: 'positionsName',
     render: (_, { positionsName}) => (
       <>
         {positionsName?.map(positions => {          
           return (
-          <div>
+          <div key={positions.name}>
             {positions.name}
           </div>);
         }
