@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
 import {Tab} from './components/Tab';
 import { useEffect } from 'react';
-import { addCheques, fetchCheques } from './API/cheques';
+import { fetchCheques } from './API/cheques';
 import { useStore } from 'effector-react';
 import { $chequesListForTable } from './API/cheques/store/table';
 

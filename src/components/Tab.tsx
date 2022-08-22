@@ -1,15 +1,17 @@
+import React from 'react';
 import { Button, Modal, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import React, { useState } from 'react';
 import { IPays, IPositions } from 'src/types'
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { deleteCheques } from 'src/API/cheques';
 import Mod from './Modal';
+import { $SelectedList, AddElement } from 'src/API/cheques/store/addCheques';
+import { useStore } from 'effector-react';
 interface ProductProps {
   cheques: ChequesTable[];
 }
-
 interface ChequesTable {
+  key: React.Key,
   id: string,
   dateReg: string,
   kioskName: string,
@@ -43,7 +45,7 @@ const columns: ColumnsType<ChequesTable> = [
   },
   {
     title: 'Статус оплаты',
-    dataIndex: 'paysTatus', 
+    dataIndex: 'paysTatus',
     render: (_, { paysTatus, sum }) => (
       <>
         {paysTatus?.map(pays => {
@@ -61,7 +63,7 @@ const columns: ColumnsType<ChequesTable> = [
             payStatus = 'Сдача';
           }     
           return (
-          <div>
+          <div key={payStatus}>
             {payStatus}
           </div>);
         }
@@ -76,7 +78,7 @@ const columns: ColumnsType<ChequesTable> = [
       <>
         {pay?.map(pays => {        
           return (
-          <div>
+          <div key={pays.sum}>
             {(pays?.sum/100).toFixed(2)+ ' ₽'}
           </div>);
         }
@@ -104,7 +106,7 @@ const columns: ColumnsType<ChequesTable> = [
       <>
         {positions?.map(positions => {
           return (
-          <div>
+          <div key={Math.random()}>
             {positions.quantity}
           </div>);
         }
@@ -119,7 +121,7 @@ const columns: ColumnsType<ChequesTable> = [
       <>
         {positionsName?.map(positions => {          
           return (
-          <div>
+          <div key={positions.name}>
             {positions.name}
           </div>);
         }
@@ -129,28 +131,13 @@ const columns: ColumnsType<ChequesTable> = [
   },
 ];
 
-
-
 export function Tab(props: ProductProps) {
   const {cheques} = props
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [modal, setModal] =useState(true);
-
-
-  const start = () => {
-    setLoading(true);
-    // ajax request after empty completing
-    setTimeout(() => {
-      setSelectedRowKeys([]);
-      setLoading(false);
-    }, 1000);
-  };
+  const selectedRowKeys = useStore($SelectedList)
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
+    AddElement(newSelectedRowKeys);
+  };  
 
   const rowSelection = {
     selectedRowKeys,
@@ -160,15 +147,13 @@ export function Tab(props: ProductProps) {
 
   const { confirm } = Modal;
   const showConfirm = () => {
-
     confirm({
       title: 'Точно хотите удалить чек?',
       icon: <ExclamationCircleOutlined />,
       okText: 'Да',
       cancelText: 'Отмена',
       onOk: () => {
-        console.log();
-        return deleteCheques
+        deleteCheques(selectedRowKeys[0])
       }      
     });
   };
@@ -176,12 +161,12 @@ export function Tab(props: ProductProps) {
   return(
     <div>
       <div className='buttons'>
-      <Button type="primary" onClick={() => deleteCheques} disabled={!hasSelected} loading={loading}>
+      <Button type="primary" onClick={showConfirm} disabled={!hasSelected}>
           Удалить
       </Button> 
       <Mod/>
       </div>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={cheques} />
+      <Table rowSelection={{type: "radio", ...rowSelection}} columns={columns} dataSource={cheques} />
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import { createEffect } from "effector";
+import React from "react";
 import { ICheques } from "src/types";
 import axiosInstance from "src/utils/axios";
-import {ChequesTable} from "./store/addCheques";
+import { IPayload } from "./types";
 
 //! GET
 // Получение данных с API
@@ -18,10 +19,10 @@ export const fetchCheques = createEffect<any, ICheques[]>(
 );
 
 // POST
-export const addCheques = createEffect <any, any> (
+export const addCheques = createEffect <IPayload, ICheques> (
    async({...rest}) => {
       try{
-         const res: any = await axiosInstance.post(`/cheques`, rest);
+         const res: ICheques = await axiosInstance.post(`/cheques`, rest);
          return res;
       }
       catch (error) {
@@ -31,11 +32,11 @@ export const addCheques = createEffect <any, any> (
 );
 
 //DELETE
-export const deleteCheques = createEffect<any, any>(
+// id передается по React.key
+export const deleteCheques = createEffect<React.Key , ICheques>(
    async(id) => {
-      console.log("id:", id);
       try{
-         const res: any = await axiosInstance.delete(`/cheques/${id}`);
+         const res: ICheques = await axiosInstance.delete(`/cheques/${id}`);
          return res;
       }
       catch (error) {

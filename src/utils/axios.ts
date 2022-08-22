@@ -1,4 +1,3 @@
-
 import axios, {
     AxiosResponse,
     AxiosRequestConfig,
@@ -10,7 +9,6 @@ import axios, {
     baseURL: process.env.REACT_APP_BASE_URL,
     timeout: 120000,
   })
-  
   
   const errorHandler = (error: AxiosError) => {
   
